@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
 public class StreamMixed {
@@ -9,18 +8,32 @@ public class StreamMixed {
 	коли у одного зі стрімів закінчаться елементи.
 	 */
 	public static <T> Stream<T> zip(Stream<T> first, Stream<T> second){
-		List<T> streamA = first.toList();
-		List<T> streamB = second.toList();
 
-		int size = Math.min(streamA.size(), streamB.size());
+		Stream.Builder <T> result = Stream.builder();
+		Iterator<T> iteratorA = first.iterator();
+		Iterator<T> iteratorB = second.iterator();
 
-		List<T> result = new ArrayList<>();
+		Stream.iterate(0, i -> iteratorA.hasNext() && iteratorB.hasNext(),
+						i -> {
+							result.add(iteratorA.next());
+							result.add(iteratorB.next());
+							return i += 1;
+						})
+				.count();
+		return result.build();
 
-		for (int i = 0; i < size; i++) {
-			result.add(streamA.get(i));
-			result.add(streamB.get(i));
-		}
-		return result.stream();
+
+//		List<T> streamA = first.toList();
+//		List<T> streamB = second.toList();
+// 		List<T> result = new ArrayList<>();
+
+//		int size = Math.min(streamA.size(), streamB.size());
+//
+//		for (int i = 0; i < size; i++) {
+//			result.add(streamA.get(i));
+//			result.add(streamB.get(i));
+//		}
+//		return result.stream();
 	}
 
 	public static void main(String[] args) {

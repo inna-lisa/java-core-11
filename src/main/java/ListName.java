@@ -2,6 +2,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ListName {
 		/*
@@ -27,11 +28,17 @@ public class ListName {
 	}
 
 	public String getNewListName(List<String> names){
-		AtomicInteger index = new AtomicInteger(1);
 
-		return names.stream()
-				.map(name -> index.getAndIncrement() + ". " + name)
-				.filter(it -> Character.getNumericValue(it.charAt(0)) % 2 != 0)
+		return Stream
+				.iterate(1, n -> n+2).limit(names.size()/2)
+				.map(i -> (i) + ". " + names.get(i-1))
 				.collect(Collectors.joining(", "));
+
+
+//		AtomicInteger index = new AtomicInteger(1);
+//		return names.stream()
+//				.map(name -> index.getAndIncrement() + ". " + name)
+//				.filter(it -> Character.getNumericValue(it.charAt(0)) % 2 != 0)
+//				.collect(Collectors.joining(", "));
 	}
 }
